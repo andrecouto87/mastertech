@@ -1,29 +1,27 @@
-package br.com.couto.mastertech.api.user;
+package br.com.couto.mastertech.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.couto.mastertech.api.user.model.User;
-import br.com.couto.mastertech.api.user.service.UserService;
+import br.com.couto.mastertech.model.UsuarioModel;
+import br.com.couto.mastertech.service.UsuarioService;
 
 import java.util.List;
 
-import com.sun.el.stream.Optional;
-
 @RestController
 @RequestMapping("/users")
-public class UserController {
+public class UsuarioController {
 
     @Autowired
-    private UserService userService;
+    private UsuarioService userService;
 
     @GetMapping(path="/find")
     public ResponseEntity<?> findAll() {
 
         try {
-            List<User> users = userService.findAll();
+            List<UsuarioModel> users = userService.findAll();
             return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;
@@ -37,7 +35,7 @@ public class UserController {
 
         try {
             
-            User user = userService.findById(idUser);
+            UsuarioModel user = userService.findById(idUser);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;
@@ -47,12 +45,12 @@ public class UserController {
     }
 
     @PostMapping(path="/save", consumes="application/json")
-    public ResponseEntity<?> save(@RequestBody User user) {
+    public ResponseEntity<?> save(@RequestBody UsuarioModel user) {
 
         try {        	        	        	
         	user.validateUser();
 
-            User userresponse = userService.save(user);
+            UsuarioModel userresponse = userService.save(user);
             return new ResponseEntity<>(userresponse, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;
@@ -62,12 +60,12 @@ public class UserController {
     }
 
     @PutMapping(path="/save", consumes="application/json")
-    public ResponseEntity<?> edit(@RequestBody User user) {
+    public ResponseEntity<?> edit(@RequestBody UsuarioModel user) {
 
         try {
         	user.validateUser();
         	
-            User userresponse = userService.save(user);
+            UsuarioModel userresponse = userService.save(user);
             return new ResponseEntity<>(userresponse, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;

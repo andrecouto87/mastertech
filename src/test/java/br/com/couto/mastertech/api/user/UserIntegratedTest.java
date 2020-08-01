@@ -21,9 +21,9 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import br.com.couto.mastertech.api.user.model.User;
-import br.com.couto.mastertech.api.user.service.UserService;
-import br.com.couto.mastertech.api.user.service.impl.UserServiceImpl;
+import br.com.couto.mastertech.model.UsuarioModel;
+import br.com.couto.mastertech.service.UsuarioService;
+import br.com.couto.mastertech.service.UsuarioServiceImpl;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -40,30 +40,30 @@ public class UserIntegratedTest {
 	private ObjectMapper objectMapper;
 
 	@Mock
-	private static UserService userService;
+	private static UsuarioService userService;
 
 	@BeforeAll
 	static void setup() {
-		userService = new UserServiceImpl();
+		userService = new UsuarioServiceImpl();
 	}
 
 	@Test
 	void testFindAllUsers() throws JsonProcessingException, Exception {
-		List<User> usersMock = new ArrayList<>();
-		User user = new User();
+		List<UsuarioModel> usersMock = new ArrayList<>();
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("31640949404");
 		user.setFullName("Manuel Joaquim");
 		user.setEmail("manuel.joaquim@gmail.com");
 		user.setRegistrationDate(new Date());
 		
-		User user2 = new User();
+		UsuarioModel user2 = new UsuarioModel();
 		user2.setId(1L);
 		user2.setCpf("31625162866");
 		user2.setFullName("Jorge Martins");
 		user2.setEmail("jirge.martins@gmail.com");
 		user2.setRegistrationDate(new Date());
 		
-		User user3 = new User();
+		UsuarioModel user3 = new UsuarioModel();
 		user3.setCpf("36910240847");
 		user3.setFullName("Maria Helena ");
 		user3.setEmail("mariahelena@gmail.com");
@@ -81,13 +81,13 @@ public class UserIntegratedTest {
 		
 		Mockito.when(userService.findAll()).thenReturn(usersMock);
 		
-		List<User> users = userService.findAll();
+		List<UsuarioModel> users = userService.findAll();
 		assertNotNull(users.size());		
 	}
 	
 	@Test
 	void testFindUserById() throws JsonProcessingException, Exception {
-		User user2 = new User();
+		UsuarioModel user2 = new UsuarioModel();
 		user2.setId(1L);
 		user2.setCpf("36910240847");
 		user2.setFullName("Maria Helena ");
@@ -102,14 +102,14 @@ public class UserIntegratedTest {
 		
 		Mockito.when(userService.findById(1L)).thenReturn(user2);
 		
-		User user = userService.findById(1L);
+		UsuarioModel user = userService.findById(1L);
 		
 		assertEquals(user.getId(), user2.getId());		
 	}
 	
 	@Test
 	void testSaveSuccess() throws JsonProcessingException, Exception {
-		User user2 = new User();
+		UsuarioModel user2 = new UsuarioModel();
 		user2.setId(1L);		
 		user2.setCpf("36910240847");
 		user2.setFullName("Maria Helena ");
@@ -124,13 +124,13 @@ public class UserIntegratedTest {
 
 		Mockito.when(userService.save(user2)).thenReturn(user2);
 		
-		User user = userService.save(user2);	
+		UsuarioModel user = userService.save(user2);
 		assertEquals(user.getCpf(), user2.getCpf());		
 	}
 	
 	@Test
 	void testSaveWithValidationCPFNullError() throws JsonProcessingException, Exception {
-		User user = new User();			
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("31640949404");
 		user.setFullName("Manuel Joaquim");
 		user.setEmail("manuel.joaquim@gmail.com");
@@ -146,7 +146,7 @@ public class UserIntegratedTest {
 	
 	@Test
 	void testSaveWithValidationCPFEmptyError() throws JsonProcessingException, Exception {
-		User user = new User();		
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("");
 		user.setFullName("Mario Neves");
 		user.setEmail("mario@gmail.com");
@@ -162,7 +162,7 @@ public class UserIntegratedTest {
 	
 	@Test
 	void testSaveWithValidationNomeNullError() throws JsonProcessingException, Exception {
-		User user = new User();	
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("36910240847");		
 		user.setEmail("jose@gmail.com");
 		user.setRegistrationDate(new Date());
@@ -177,7 +177,7 @@ public class UserIntegratedTest {
 	
 	@Test
 	void testSaveWithValidationNomeEmptyError() throws JsonProcessingException, Exception {
-		User user = new User();		
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("36910240847");
 		user.setFullName("");
 		user.setEmail("paul.miller@gmail.com");
@@ -193,7 +193,7 @@ public class UserIntegratedTest {
 	
 	@Test
 	void testSaveWithValidationEmailNullError() throws JsonProcessingException, Exception {
-		User user2 = new User();	
+		UsuarioModel user2 = new UsuarioModel();
 		user2.setCpf("36910240847");
 		user2.setFullName("Patrick Mackel");		
 		user2.setRegistrationDate(new Date());
@@ -208,7 +208,7 @@ public class UserIntegratedTest {
 	
 	@Test
 	void testSaveWithValidationEmailEmptyError() throws JsonProcessingException, Exception {
-		User user = new User();		
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("36910240847");
 		user.setFullName("Marcos Pereira");
 		user.setEmail("");
@@ -224,7 +224,7 @@ public class UserIntegratedTest {
 	
 	@Test
 	void testSaveWithValidationRegistrationDateNullError() throws JsonProcessingException, Exception {
-		User user = new User();			
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("36910240847");
 		user.setFullName("Bruno Gobil");
 		user.setEmail("bruno.gobil@gmail.com");
@@ -238,7 +238,7 @@ public class UserIntegratedTest {
 	
 	@Test
 	void testSaveEditSuccess() throws JsonProcessingException, Exception {
-		User user = new User();		
+		UsuarioModel user = new UsuarioModel();
 		user.setCpf("36910240847");
 		user.setFullName("Milton Cruz");
 		user.setEmail("milton.cruzs@gmail.com");
@@ -252,7 +252,7 @@ public class UserIntegratedTest {
 
 		Mockito.when(userService.save(user)).thenReturn(user);
 		
-		User user2 = userService.save(user);	
+		UsuarioModel user2 = userService.save(user);
 		assertEquals(user2.getCpf(), user.getCpf());		
 	}
 

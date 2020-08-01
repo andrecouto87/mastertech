@@ -1,4 +1,4 @@
-package br.com.couto.mastertech.api.user.model;
+package br.com.couto.mastertech.model;
 
 import org.hibernate.validator.constraints.br.CPF;
 
@@ -10,7 +10,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "tb_user", schema = "MASTERTECH")
-public class User implements Serializable {
+public class UsuarioModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 

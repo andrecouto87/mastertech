@@ -2,18 +2,18 @@ package br.com.couto.mastertech.api.electronicpointcontrol.pojo;
 
 import java.util.List;
 
-import br.com.couto.mastertech.api.user.model.User;
+import br.com.couto.mastertech.model.UsuarioModel;
 
 public class ElectronicPointControlDTO<EletronicPointControlVO> {
 	
-	private User user;
+	private UsuarioModel user;
 	private List<EletronicPointControlVO> eletronicPointControls;
 
-	public User getUser() {
+	public UsuarioModel getUser() {
 		return user;
 	}
 
-	public void setUsuario(User user) {
+	public void setUsuario(UsuarioModel user) {
 		this.user = user;
 	}
 

@@ -1,4 +1,4 @@
-package br.com.couto.mastertech.api.electronicpointcontrol.model;
+package br.com.couto.mastertech.model;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -17,11 +17,10 @@ import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 
 import br.com.couto.mastertech.api.electronicpointcontrol.converter.PointControlTypeConverter;
-import br.com.couto.mastertech.api.user.model.User;
 
 @Entity
 @Table(name = "tb_electronic_point_control", schema = "MASTERTECH")
-public class ElectronicPointControl implements Serializable {
+public class PontoEletronicoModel implements Serializable {
 
     private static final long serialVersionUID = 1L;
 
@@ -31,7 +30,7 @@ public class ElectronicPointControl implements Serializable {
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "id_user", referencedColumnName = "id", insertable = true)
-    private User user;
+    private UsuarioModel user;
     
     @Column(name = "point_record_date")
     @Temporal(TemporalType.TIMESTAMP)
@@ -39,7 +38,7 @@ public class ElectronicPointControl implements Serializable {
 	
 	@Column(name = "point_record_type")
 	@Convert(converter = PointControlTypeConverter.class)
-    private PointRecordType pointRecordType;
+    private TipoBatidaModel pointRecordType;
 	
     public Long getId() {
         return id;
@@ -49,11 +48,11 @@ public class ElectronicPointControl implements Serializable {
         this.id = id;
     }
 
-    public User getUser() {
+    public UsuarioModel getUser() {
         return user;
     }
 
-    public void setUser(User user) {
+    public void setUser(UsuarioModel user) {
         this.user = user;
     }
 
@@ -65,11 +64,11 @@ public class ElectronicPointControl implements Serializable {
 		this.pointRecordDate= pointRecordDate;
 	}
 
-	public PointRecordType getPointRecordType() {
+	public TipoBatidaModel getPointRecordType() {
 		return pointRecordType;
 	}
 
-	public void setPointRecordType(PointRecordType pointRecordType) {
+	public void setPointRecordType(TipoBatidaModel pointRecordType) {
 		this.pointRecordType = pointRecordType;
 	}
 }

@@ -1,4 +1,4 @@
-package br.com.couto.mastertech.api.electronicpointcontrol;
+package br.com.couto.mastertech.controller;
 
 import java.util.List;
 
@@ -12,16 +12,16 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.couto.mastertech.api.electronicpointcontrol.model.ElectronicPointControl;
+import br.com.couto.mastertech.model.PontoEletronicoModel;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ElectronicPointControlDTO;
-import br.com.couto.mastertech.api.electronicpointcontrol.service.ElectronicPointControlService;
+import br.com.couto.mastertech.service.PontoEletronicoService;
 
 @RestController
 @RequestMapping("/electronicpointcontrol")
-public class ElectronicPointControlController {
+public class PontoEletronicoController {
 
     @Autowired
-    private ElectronicPointControlService electronicPointControlService;
+    private PontoEletronicoService electronicPointControlService;
 
     @GetMapping(path="/find/{idUser}")
     public ResponseEntity<?> findById(@PathVariable Long idUser) {
@@ -37,10 +37,10 @@ public class ElectronicPointControlController {
     }
 
     @PostMapping(path="/register", consumes="application/json")
-    public ResponseEntity<?> save(@RequestBody ElectronicPointControl electronicPointControl) {
+    public ResponseEntity<?> save(@RequestBody PontoEletronicoModel electronicPointControl) {
 
         try {
-        	ElectronicPointControl point = electronicPointControlService.save(electronicPointControl);
+        	PontoEletronicoModel point = electronicPointControlService.save(electronicPointControl);
             return new ResponseEntity<>(point, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;

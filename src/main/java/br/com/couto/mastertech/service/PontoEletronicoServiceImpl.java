@@ -1,4 +1,4 @@
-package br.com.couto.mastertech.api.electronicpointcontrol.service.impl;
+package br.com.couto.mastertech.service;
 
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,33 +11,32 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.couto.mastertech.api.electronicpointcontrol.model.ElectronicPointControl;
+import br.com.couto.mastertech.model.PontoEletronicoModel;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ElectronicPointControlDTO;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.EletronicPointControlVO;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ToPunchTheClockVO;
-import br.com.couto.mastertech.api.electronicpointcontrol.repository.ElectronicPointControlRepository;
-import br.com.couto.mastertech.api.electronicpointcontrol.service.ElectronicPointControlService;
-import br.com.couto.mastertech.api.user.model.User;
+import br.com.couto.mastertech.repository.PontoEletronicoRepository;
+import br.com.couto.mastertech.model.UsuarioModel;
 import br.com.couto.mastertech.util.DateUtil;
 
 @Service
-public class ElectronicPointControlServiceImpl implements ElectronicPointControlService {
+public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 
     @Autowired
-    private ElectronicPointControlRepository electronicPointControlRepository;
+    private PontoEletronicoRepository electronicPointControlRepository;
 
     @Override
-    public ElectronicPointControl save(ElectronicPointControl electronicPointControl) {	
+    public PontoEletronicoModel save(PontoEletronicoModel electronicPointControl) {
         return electronicPointControlRepository.saveAndFlush(electronicPointControl);
     }
 
 	@Override
 	public List<ElectronicPointControlDTO> findByUser(Long idUser) {
 		
-		User user = new User();
+		UsuarioModel user = new UsuarioModel();
 		user.setId(idUser);
 		
-		List<ElectronicPointControl> records = electronicPointControlRepository.findByUser(user);
+		List<PontoEletronicoModel> records = electronicPointControlRepository.findByUser(user);
 
 		if (records != null && !records.isEmpty()) {			
 			return fillElectronicPointControl(records);
@@ -46,18 +45,18 @@ public class ElectronicPointControlServiceImpl implements ElectronicPointControl
 		return null;
 	}
     
-	private List<ElectronicPointControlDTO> fillElectronicPointControl(List<ElectronicPointControl> electronicPointControl) {
-		Map<User, Map<String, List<ElectronicPointControl>>> map = createMapElectronicPointControl(electronicPointControl);
+	private List<ElectronicPointControlDTO> fillElectronicPointControl(List<PontoEletronicoModel> electronicPointControl) {
+		Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> map = createMapElectronicPointControl(electronicPointControl);
 		
 		return fillElectronicPointControlDTO(map);
 	}
 	
-	private List<ElectronicPointControlDTO> fillElectronicPointControlDTO(Map<User, Map<String, List<ElectronicPointControl>>> map) {
+	private List<ElectronicPointControlDTO> fillElectronicPointControlDTO(Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> map) {
 		
 		List<ElectronicPointControlDTO> dtos = new ArrayList<>();
 		ElectronicPointControlDTO dto = null;
 		
-		for(Entry<User, Map<String, List<ElectronicPointControl>>> entry : map.entrySet()) {
+		for(Entry<UsuarioModel, Map<String, List<PontoEletronicoModel>>> entry : map.entrySet()) {
 			dto = new ElectronicPointControlDTO();
 			dto.setUsuario(entry.getKey());
 			dto.setEletricPointControl(fillElectronicPointControlVO(entry.getValue()));
@@ -68,11 +67,11 @@ public class ElectronicPointControlServiceImpl implements ElectronicPointControl
 		return dtos;
 	}
 
-	private List<EletronicPointControlVO> fillElectronicPointControlVO(Map<String, List<ElectronicPointControl>> map) {
+	private List<EletronicPointControlVO> fillElectronicPointControlVO(Map<String, List<PontoEletronicoModel>> map) {
 		
 		List<EletronicPointControlVO> vos = new ArrayList<>();
 		EletronicPointControlVO vo = null;
-		for(Entry<String, List<ElectronicPointControl>> entry : map.entrySet()) {
+		for(Entry<String, List<PontoEletronicoModel>> entry : map.entrySet()) {
 			vo = new EletronicPointControlVO(entry.getKey(), toPunchTheClock(entry.getValue()));
 			vo.setWorkHours(calculoTotalHorasTrabalhadas(vo.getRecord()));
 			vos.add(vo);	
@@ -81,10 +80,10 @@ public class ElectronicPointControlServiceImpl implements ElectronicPointControl
 		return vos;
 	}
 
-	private List<ToPunchTheClockVO> toPunchTheClock(List<ElectronicPointControl> electronicPointControls) {
+	private List<ToPunchTheClockVO> toPunchTheClock(List<PontoEletronicoModel> electronicPointControls) {
 		List<ToPunchTheClockVO> vos = new ArrayList<>();
 		ToPunchTheClockVO vo = null;
-		for (ElectronicPointControl p : electronicPointControls) {
+		for (PontoEletronicoModel p : electronicPointControls) {
 			vo = new ToPunchTheClockVO(DateUtil.formatTime(p.getPointRecordDate()), p.getPointRecordType());
 			vos.add(vo);
 		}
@@ -114,19 +113,19 @@ public class ElectronicPointControlServiceImpl implements ElectronicPointControl
 		return LocalTime.of(Long.valueOf(diffHours).intValue(), Long.valueOf(diffMin).intValue());
 	}
 
-	private Map<User, Map<String, List<ElectronicPointControl>>> createMapElectronicPointControl(List<ElectronicPointControl> electronicPointControls) {
-		Map<User, Map<String, List<ElectronicPointControl>>> map = new HashMap();
-		Map<String, List<ElectronicPointControl>> mapPointControlUser = null;
+	private Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> createMapElectronicPointControl(List<PontoEletronicoModel> electronicPointControls) {
+		Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> map = new HashMap();
+		Map<String, List<PontoEletronicoModel>> mapPointControlUser = null;
 		
-		User user = null;
-		for(ElectronicPointControl point : electronicPointControls) {
+		UsuarioModel user = null;
+		for(PontoEletronicoModel point : electronicPointControls) {
 			user = point.getUser();
 			
 			if (map.get(point.getUser()) != null) {
 				mapPointControlUser = map.get(point.getUser());
 				fillPointControlUser(mapPointControlUser, point);							
 			} else {
-				mapPointControlUser = new HashMap<String, List<ElectronicPointControl>>();					 
+				mapPointControlUser = new HashMap<String, List<PontoEletronicoModel>>();
 				fillPointControlUser(mapPointControlUser, point);
 			}
 			map.put(user, mapPointControlUser);
@@ -135,10 +134,10 @@ public class ElectronicPointControlServiceImpl implements ElectronicPointControl
 		return map;
 	}
 
-	private void fillPointControlUser(Map<String, List<ElectronicPointControl>> map, ElectronicPointControl point) {
+	private void fillPointControlUser(Map<String, List<PontoEletronicoModel>> map, PontoEletronicoModel point) {
 		String pointDate = DateUtil.formatDate(point.getPointRecordDate());
 		
-		List<ElectronicPointControl> pointList = null;
+		List<PontoEletronicoModel> pointList = null;
 		if (map.get(pointDate) != null) {
 			pointList = map.get(pointDate);
 			pointList.add(point);

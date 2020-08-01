@@ -1,12 +1,12 @@
-package br.com.couto.mastertech.api.electronicpointcontrol.model;
+package br.com.couto.mastertech.model;
 
-public enum PointRecordType {
+public enum TipoBatidaModel {
     INPUT("IN"),
     OUTPUT("OUT");
 
     private String type;
 
-    PointRecordType(String type) {
+    TipoBatidaModel(String type) {
         this.type = type;
     }
 

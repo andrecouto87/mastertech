@@ -22,12 +22,12 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
-import br.com.couto.mastertech.api.electronicpointcontrol.model.ElectronicPointControl;
+import br.com.couto.mastertech.model.PontoEletronicoModel;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ElectronicPointControlDTO;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.EletronicPointControlVO;
-import br.com.couto.mastertech.api.electronicpointcontrol.service.ElectronicPointControlService;
-import br.com.couto.mastertech.api.electronicpointcontrol.service.impl.ElectronicPointControlServiceImpl;
-import br.com.couto.mastertech.api.user.model.User;
+import br.com.couto.mastertech.service.PontoEletronicoService;
+import br.com.couto.mastertech.service.PontoEletronicoServiceImpl;
+import br.com.couto.mastertech.model.UsuarioModel;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -44,18 +44,18 @@ public class ElectronicPointControlIntegratedTest {
 	private ObjectMapper objectMapper;
 	
 	@Mock
-	private static ElectronicPointControlService electronicPointControlService;
+	private static PontoEletronicoService electronicPointControlService;
 
 	@BeforeAll
 	static void setup() {
-		electronicPointControlService = new ElectronicPointControlServiceImpl();
+		electronicPointControlService = new PontoEletronicoServiceImpl();
 	}
 
 	@Test
 	void testFindByUser() throws JsonProcessingException, Exception {
 		List<ElectronicPointControlDTO> dtos = new ArrayList<>();
-		List<ElectronicPointControl> ElectronicPiontControlMock = new ArrayList<>();
-		User user = new User();
+		List<PontoEletronicoModel> ElectronicPiontControlMock = new ArrayList<>();
+		UsuarioModel user = new UsuarioModel();
 		user.setId(1L);
 		user.setCpf("36912040847");
 		user.setFullName("Jorge Martins");
@@ -87,8 +87,8 @@ public class ElectronicPointControlIntegratedTest {
 
 	@Test
 	void testFindByUserReturningNull() throws JsonProcessingException, Exception {
-		List<ElectronicPointControl> ElectronicPiontControlMock = new ArrayList<>();
-		User user = new User();
+		List<PontoEletronicoModel> ElectronicPiontControlMock = new ArrayList<>();
+		UsuarioModel user = new UsuarioModel();
 		user.setId(1000000000000000000L);
 		user.setCpf("36912040847");
 		user.setFullName("Jorge Martins");
@@ -114,7 +114,7 @@ public class ElectronicPointControlIntegratedTest {
 
 	@Test
 	void testFindByUserBadRequest() throws JsonProcessingException, Exception {
-		User user = new User();
+		UsuarioModel user = new UsuarioModel();
 		user.setId(1L);
 		user.setCpf("36912040847");
 		user.setFullName("Jorge Martins");

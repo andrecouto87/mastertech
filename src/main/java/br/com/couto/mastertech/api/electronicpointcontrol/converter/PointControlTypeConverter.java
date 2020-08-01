@@ -4,13 +4,13 @@ import java.util.stream.Stream;
 import javax.persistence.AttributeConverter;
 import javax.persistence.Converter;
 
-import br.com.couto.mastertech.api.electronicpointcontrol.model.PointRecordType;
+import br.com.couto.mastertech.model.TipoBatidaModel;
 
 @Converter(autoApply = true)
-public class PointControlTypeConverter implements AttributeConverter<PointRecordType, String> {
+public class PointControlTypeConverter implements AttributeConverter<TipoBatidaModel, String> {
   
     @Override
-    public String convertToDatabaseColumn(PointRecordType pointRecordType) {
+    public String convertToDatabaseColumn(TipoBatidaModel pointRecordType) {
         if (pointRecordType == null) {
             return null;
         }
@@ -18,12 +18,12 @@ public class PointControlTypeConverter implements AttributeConverter<PointRecord
     }
  
     @Override
-    public PointRecordType convertToEntityAttribute(String code) { 	
+    public TipoBatidaModel convertToEntityAttribute(String code) {
         if (code == null) {
             return null;
         }
         
-        return Stream.of(PointRecordType.values())
+        return Stream.of(TipoBatidaModel.values())
           .filter(c -> c.getType().equals(code))
           .findFirst()
           .orElseThrow(IllegalArgumentException::new);
