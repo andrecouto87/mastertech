@@ -1,6 +1,6 @@
 package br.com.couto.mastertech.service;
 
-import br.com.couto.mastertech.model.UsuarioModel;
+import br.com.couto.mastertech.entity.Usuario;
 import br.com.couto.mastertech.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -14,17 +14,17 @@ public class UsuarioServiceImpl implements UsuarioService {
     private UsuarioRepository repository;
 
     @Override
-    public List<UsuarioModel> findAll() {
+    public List<Usuario> findAll() {
         return repository.findAll();
     }
 
     @Override
-    public UsuarioModel findById(Long idUser) {
+    public Usuario findById(Long idUser) {
         return repository.findById(idUser).isPresent() ? repository.findById(idUser).get() : null;
     }
 
     @Override
-    public UsuarioModel save(UsuarioModel user) {
+    public Usuario save(Usuario user) {
         return repository.save(user);
     }
 }

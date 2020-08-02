@@ -1,6 +1,6 @@
 package br.com.couto.mastertech.model;
 
-public enum TipoRegistro {
+public enum TipoMarcacao {
     ENTRADA,
     SAIDA
 }

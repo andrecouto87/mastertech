@@ -2,13 +2,13 @@ package br.com.couto.mastertech.service;
 
 import java.util.List;
 
-import br.com.couto.mastertech.model.UsuarioModel;
+import br.com.couto.mastertech.entity.Usuario;
 
 public interface UsuarioService {
 
-    List<UsuarioModel> findAll();
+    List<Usuario> findAll();
 
-    UsuarioModel findById(Long idUsuario);
+    Usuario findById(Long idUsuario);
 
-    UsuarioModel save(UsuarioModel usuario);
+    Usuario save(Usuario usuario);
 }

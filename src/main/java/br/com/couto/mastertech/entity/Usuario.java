@@ -1,92 +1,47 @@
 package br.com.couto.mastertech.entity;
 
-import org.hibernate.validator.constraints.br.CPF;
+import br.com.couto.mastertech.model.TipoMarcacao;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
-import java.io.Serializable;
 import java.util.Date;
 
 @Entity
-@Table(name = "tb_user", schema = "MASTERTECH")
-public class UsuarioModel implements Serializable {
-
-    private static final long serialVersionUID = 1L;
+@NoArgsConstructor
+@AllArgsConstructor
+public class Usuario {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue
     private Long id;
 
-    @CPF(message = "Invalid CPF")
-    @Column(name = "cpf")
-    @NotBlank
-    private String cpf;
+    @Temporal(TemporalType.DATE)
+    @Getter
+    @OrderBy
+    Date data;
 
-    @Column(name = "full_name")
-    @NotBlank
-    private String fullName;
+    @Temporal(TemporalType.TIME)
+    @Getter
+    @OrderBy
+    Date hora;
 
-    @Email(message = "Invalid E-mail")
-    @Column(name = "email")
-    @NotBlank
-    private String email;
+    @Getter
+    @Setter
+    @Enumerated(EnumType.STRING)
+    private TipoMarcacao tipoMarcacao;
 
-    @Column(name = "registration_date")
-    @Temporal(TemporalType.TIMESTAMP)
-    private Date registrationDate;
+    @ManyToOne
+    @Getter
+    @Setter
+    private Usuario usuario;
 
-    public Long getId() {
-        return id;
+    @PrePersist
+    protected void onCreate() {
+        data = new Date();
+        hora = new Date();
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getCpf() {
-        return cpf;
-    }
-
-    public void setCpf(String cpf) {
-        this.cpf = cpf;
-    }
-
-    public String getFullName() {
-        return fullName;
-    }
-
-    public void setFullName(String fullName) {
-        this.fullName = fullName;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Date getRegistrationDate() {
-        return registrationDate;
-    }
-
-    public void setRegistrationDate(Date registrationNamwe) {
-        this.registrationDate = registrationNamwe;
-    }
-    
-    public void validateUser() {
-    	if (this.getCpf() == null || this.getCpf().isEmpty())
-    		throw new IllegalArgumentException("CPF cannot be blank.");
-    	
-    	if (this.getEmail() == null || this.getEmail().isEmpty())
-    		throw new IllegalArgumentException("Email cannot be blank.");
-    	
-    	if (this.getFullName() == null || this.getFullName().isEmpty())
-    		throw new IllegalArgumentException("Full name cannot be blank.");
-    	
-    	if (this.getRegistrationDate() == null)
-    		throw new IllegalArgumentException("Registration date cannot be blank.");    	
-    }
 }

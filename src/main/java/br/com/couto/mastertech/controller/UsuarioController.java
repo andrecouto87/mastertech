@@ -5,7 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.couto.mastertech.model.UsuarioModel;
+import br.com.couto.mastertech.entity.Usuario;
 import br.com.couto.mastertech.service.UsuarioService;
 
 import java.util.List;
@@ -21,7 +21,7 @@ public class UsuarioController {
     public ResponseEntity<?> findAll() {
 
         try {
-            List<UsuarioModel> users = userService.findAll();
+            List<Usuario> users = userService.findAll();
             return new ResponseEntity<>(users, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;
@@ -35,7 +35,7 @@ public class UsuarioController {
 
         try {
             
-            UsuarioModel user = userService.findById(idUser);
+            Usuario user = userService.findById(idUser);
             return new ResponseEntity<>(user, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;
@@ -45,12 +45,12 @@ public class UsuarioController {
     }
 
     @PostMapping(path="/save", consumes="application/json")
-    public ResponseEntity<?> save(@RequestBody UsuarioModel user) {
+    public ResponseEntity<?> save(@RequestBody Usuario user) {
 
         try {        	        	        	
         	user.validateUser();
 
-            UsuarioModel userresponse = userService.save(user);
+            Usuario userresponse = userService.save(user);
             return new ResponseEntity<>(userresponse, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;
@@ -60,12 +60,12 @@ public class UsuarioController {
     }
 
     @PutMapping(path="/save", consumes="application/json")
-    public ResponseEntity<?> edit(@RequestBody UsuarioModel user) {
+    public ResponseEntity<?> edit(@RequestBody Usuario user) {
 
         try {
         	user.validateUser();
         	
-            UsuarioModel userresponse = userService.save(user);
+            Usuario userresponse = userService.save(user);
             return new ResponseEntity<>(userresponse, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;

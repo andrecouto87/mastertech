@@ -11,12 +11,12 @@ import java.util.Map.Entry;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import br.com.couto.mastertech.model.PontoEletronicoModel;
+import br.com.couto.mastertech.entity.PontoEletronico;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ElectronicPointControlDTO;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.EletronicPointControlVO;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ToPunchTheClockVO;
 import br.com.couto.mastertech.repository.PontoEletronicoRepository;
-import br.com.couto.mastertech.model.UsuarioModel;
+import br.com.couto.mastertech.entity.Usuario;
 import br.com.couto.mastertech.util.DateUtil;
 
 @Service
@@ -26,17 +26,17 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
     private PontoEletronicoRepository electronicPointControlRepository;
 
     @Override
-    public PontoEletronicoModel save(PontoEletronicoModel electronicPointControl) {
+    public PontoEletronico save(PontoEletronico electronicPointControl) {
         return electronicPointControlRepository.saveAndFlush(electronicPointControl);
     }
 
 	@Override
 	public List<ElectronicPointControlDTO> findByUser(Long idUser) {
 		
-		UsuarioModel user = new UsuarioModel();
+		Usuario user = new Usuario();
 		user.setId(idUser);
 		
-		List<PontoEletronicoModel> records = electronicPointControlRepository.findByUser(user);
+		List<PontoEletronico> records = electronicPointControlRepository.findByUser(user);
 
 		if (records != null && !records.isEmpty()) {			
 			return fillElectronicPointControl(records);
@@ -45,18 +45,18 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 		return null;
 	}
     
-	private List<ElectronicPointControlDTO> fillElectronicPointControl(List<PontoEletronicoModel> electronicPointControl) {
-		Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> map = createMapElectronicPointControl(electronicPointControl);
+	private List<ElectronicPointControlDTO> fillElectronicPointControl(List<PontoEletronico> electronicPointControl) {
+		Map<Usuario, Map<String, List<PontoEletronico>>> map = createMapElectronicPointControl(electronicPointControl);
 		
 		return fillElectronicPointControlDTO(map);
 	}
 	
-	private List<ElectronicPointControlDTO> fillElectronicPointControlDTO(Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> map) {
+	private List<ElectronicPointControlDTO> fillElectronicPointControlDTO(Map<Usuario, Map<String, List<PontoEletronico>>> map) {
 		
 		List<ElectronicPointControlDTO> dtos = new ArrayList<>();
 		ElectronicPointControlDTO dto = null;
 		
-		for(Entry<UsuarioModel, Map<String, List<PontoEletronicoModel>>> entry : map.entrySet()) {
+		for(Entry<Usuario, Map<String, List<PontoEletronico>>> entry : map.entrySet()) {
 			dto = new ElectronicPointControlDTO();
 			dto.setUsuario(entry.getKey());
 			dto.setEletricPointControl(fillElectronicPointControlVO(entry.getValue()));
@@ -67,11 +67,11 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 		return dtos;
 	}
 
-	private List<EletronicPointControlVO> fillElectronicPointControlVO(Map<String, List<PontoEletronicoModel>> map) {
+	private List<EletronicPointControlVO> fillElectronicPointControlVO(Map<String, List<PontoEletronico>> map) {
 		
 		List<EletronicPointControlVO> vos = new ArrayList<>();
 		EletronicPointControlVO vo = null;
-		for(Entry<String, List<PontoEletronicoModel>> entry : map.entrySet()) {
+		for(Entry<String, List<PontoEletronico>> entry : map.entrySet()) {
 			vo = new EletronicPointControlVO(entry.getKey(), toPunchTheClock(entry.getValue()));
 			vo.setWorkHours(calculoTotalHorasTrabalhadas(vo.getRecord()));
 			vos.add(vo);	
@@ -80,10 +80,10 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 		return vos;
 	}
 
-	private List<ToPunchTheClockVO> toPunchTheClock(List<PontoEletronicoModel> electronicPointControls) {
+	private List<ToPunchTheClockVO> toPunchTheClock(List<PontoEletronico> electronicPointControls) {
 		List<ToPunchTheClockVO> vos = new ArrayList<>();
 		ToPunchTheClockVO vo = null;
-		for (PontoEletronicoModel p : electronicPointControls) {
+		for (PontoEletronico p : electronicPointControls) {
 			vo = new ToPunchTheClockVO(DateUtil.formatTime(p.getPointRecordDate()), p.getPointRecordType());
 			vos.add(vo);
 		}
@@ -113,19 +113,19 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 		return LocalTime.of(Long.valueOf(diffHours).intValue(), Long.valueOf(diffMin).intValue());
 	}
 
-	private Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> createMapElectronicPointControl(List<PontoEletronicoModel> electronicPointControls) {
-		Map<UsuarioModel, Map<String, List<PontoEletronicoModel>>> map = new HashMap();
-		Map<String, List<PontoEletronicoModel>> mapPointControlUser = null;
+	private Map<Usuario, Map<String, List<PontoEletronico>>> createMapElectronicPointControl(List<PontoEletronico> electronicPointControls) {
+		Map<Usuario, Map<String, List<PontoEletronico>>> map = new HashMap();
+		Map<String, List<PontoEletronico>> mapPointControlUser = null;
 		
-		UsuarioModel user = null;
-		for(PontoEletronicoModel point : electronicPointControls) {
+		Usuario user = null;
+		for(PontoEletronico point : electronicPointControls) {
 			user = point.getUser();
 			
 			if (map.get(point.getUser()) != null) {
 				mapPointControlUser = map.get(point.getUser());
 				fillPointControlUser(mapPointControlUser, point);							
 			} else {
-				mapPointControlUser = new HashMap<String, List<PontoEletronicoModel>>();
+				mapPointControlUser = new HashMap<String, List<PontoEletronico>>();
 				fillPointControlUser(mapPointControlUser, point);
 			}
 			map.put(user, mapPointControlUser);
@@ -134,10 +134,10 @@ public class PontoEletronicoServiceImpl implements PontoEletronicoService {
 		return map;
 	}
 
-	private void fillPointControlUser(Map<String, List<PontoEletronicoModel>> map, PontoEletronicoModel point) {
+	private void fillPointControlUser(Map<String, List<PontoEletronico>> map, PontoEletronico point) {
 		String pointDate = DateUtil.formatDate(point.getPointRecordDate());
 		
-		List<PontoEletronicoModel> pointList = null;
+		List<PontoEletronico> pointList = null;
 		if (map.get(pointDate) != null) {
 			pointList = map.get(pointDate);
 			pointList.add(point);

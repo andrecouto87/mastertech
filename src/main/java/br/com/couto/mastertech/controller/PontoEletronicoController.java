@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.couto.mastertech.model.PontoEletronicoModel;
+import br.com.couto.mastertech.entity.PontoEletronico;
 import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ElectronicPointControlDTO;
 import br.com.couto.mastertech.service.PontoEletronicoService;
 
@@ -37,10 +37,10 @@ public class PontoEletronicoController {
     }
 
     @PostMapping(path="/register", consumes="application/json")
-    public ResponseEntity<?> save(@RequestBody PontoEletronicoModel electronicPointControl) {
+    public ResponseEntity<?> save(@RequestBody PontoEletronico electronicPointControl) {
 
         try {
-        	PontoEletronicoModel point = electronicPointControlService.save(electronicPointControl);
+        	PontoEletronico point = electronicPointControlService.save(electronicPointControl);
             return new ResponseEntity<>(point, HttpStatus.OK);
         } catch (Exception e) {
             String errorMessage;

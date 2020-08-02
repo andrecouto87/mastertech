@@ -5,12 +5,12 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
-import br.com.couto.mastertech.model.PontoEletronicoModel;
-import br.com.couto.mastertech.model.UsuarioModel;
+import br.com.couto.mastertech.entity.PontoEletronico;
+import br.com.couto.mastertech.entity.Usuario;
 
 @Repository
-public interface PontoEletronicoRepository extends JpaRepository<PontoEletronicoModel, Long> {
+public interface PontoEletronicoRepository extends JpaRepository<PontoEletronico, Long> {
 	
-	List<PontoEletronicoModel> findByUser(UsuarioModel user);
+	List<PontoEletronico> findByUser(Usuario user);
 
 }
