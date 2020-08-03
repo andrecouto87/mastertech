@@ -1,76 +1,59 @@
 package br.com.couto.mastertech.controller;
 
+import br.com.couto.mastertech.model.UsuarioModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import br.com.couto.mastertech.entity.Usuario;
-import br.com.couto.mastertech.service.UsuarioService;
+import br.com.couto.mastertech.service.usuario.UsuarioService;
 
 import java.util.List;
 
 @RestController
-@RequestMapping("/users")
+@RequestMapping("/usuario")
 public class UsuarioController {
 
     @Autowired
-    private UsuarioService userService;
+    private UsuarioService usuarioService;
 
-    @GetMapping(path="/find")
-    public ResponseEntity<?> findAll() {
+    @GetMapping()
+    public ResponseEntity<List<UsuarioModel>> findAll() {
+        List<UsuarioModel> usuarios = usuarioService.findAll();
+        return ResponseEntity.ok().body(usuarios);
+    }
 
+    @GetMapping(path = {"{id}"})
+    public ResponseEntity<UsuarioModel> findById(@PathVariable("id") Long idUsuario) {
         try {
-            List<Usuario> users = userService.findAll();
-            return new ResponseEntity<>(users, HttpStatus.OK);
-        } catch (Exception e) {
+            return ResponseEntity.ok(usuarioService.findById(idUsuario));
+        } catch (Exception ex) {
             String errorMessage;
-            errorMessage = e + " <-- error";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            errorMessage = ex + " <-- error";
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).eTag(errorMessage).build();
         }
     }
 
-    @GetMapping(path="/find/{idUser}")
-    public ResponseEntity<?> findById(@PathVariable Long idUser) {
-
+    @PostMapping()
+    public ResponseEntity<UsuarioModel> save(@RequestBody UsuarioModel usuario) {
         try {
-            
-            Usuario user = userService.findById(idUser);
-            return new ResponseEntity<>(user, HttpStatus.OK);
+            UsuarioModel newUsuario = usuarioService.save(usuario);
+            return ResponseEntity.ok().body(newUsuario);
         } catch (Exception e) {
             String errorMessage;
             errorMessage = e + " <-- error";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).eTag(errorMessage).build();
         }
     }
 
-    @PostMapping(path="/save", consumes="application/json")
-    public ResponseEntity<?> save(@RequestBody Usuario user) {
-
-        try {        	        	        	
-        	user.validateUser();
-
-            Usuario userresponse = userService.save(user);
-            return new ResponseEntity<>(userresponse, HttpStatus.OK);
-        } catch (Exception e) {
-            String errorMessage;
-            errorMessage = e + " <-- error";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
-        }
-    }
-
-    @PutMapping(path="/save", consumes="application/json")
-    public ResponseEntity<?> edit(@RequestBody Usuario user) {
-
+    @PutMapping(path = {"{id}"})
+    public ResponseEntity<UsuarioModel> edit(@PathVariable(value = "id") Long id, @RequestBody UsuarioModel usuario) {
         try {
-        	user.validateUser();
-        	
-            Usuario userresponse = userService.save(user);
-            return new ResponseEntity<>(userresponse, HttpStatus.OK);
+            return ResponseEntity.ok().body(usuarioService.edit(id, usuario));
         } catch (Exception e) {
             String errorMessage;
             errorMessage = e + " <-- error";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).eTag(errorMessage).build();
         }
     }
 }

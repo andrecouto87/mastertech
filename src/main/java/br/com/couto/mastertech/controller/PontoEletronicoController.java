@@ -1,51 +1,43 @@
 package br.com.couto.mastertech.controller;
 
-import java.util.List;
-
+import br.com.couto.mastertech.model.PontoEletronicoModel;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
-import br.com.couto.mastertech.entity.PontoEletronico;
-import br.com.couto.mastertech.api.electronicpointcontrol.pojo.ElectronicPointControlDTO;
-import br.com.couto.mastertech.service.PontoEletronicoService;
+import br.com.couto.mastertech.service.pontoeletronico.PontoEletronicoService;
+
+import java.util.List;
 
 @RestController
-@RequestMapping("/electronicpointcontrol")
+@RequestMapping("/pontoeletronico")
 public class PontoEletronicoController {
 
     @Autowired
-    private PontoEletronicoService electronicPointControlService;
+    private PontoEletronicoService pontoEletronicoService;
 
-    @GetMapping(path="/find/{idUser}")
-    public ResponseEntity<?> findById(@PathVariable Long idUser) {
-
+    @GetMapping()
+    public ResponseEntity<List<PontoEletronicoModel>> findAll(@RequestHeader Long idUsuario) {
         try {
-            List<ElectronicPointControlDTO> electronicPointControl = electronicPointControlService.findByUser(idUser);
-            return new ResponseEntity<>(electronicPointControl, HttpStatus.OK);
+            List<PontoEletronicoModel> pontos = pontoEletronicoService.findAll(idUsuario);
+            return ResponseEntity.ok().body(pontos);
         } catch (Exception e) {
             String errorMessage;
             errorMessage = e + " <-- error";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).eTag(errorMessage).build();
         }
     }
 
-    @PostMapping(path="/register", consumes="application/json")
-    public ResponseEntity<?> save(@RequestBody PontoEletronico electronicPointControl) {
-
+    @PostMapping()
+    public ResponseEntity<String> register(@RequestHeader Long idUsuario) {
         try {
-        	PontoEletronico point = electronicPointControlService.save(electronicPointControl);
-            return new ResponseEntity<>(point, HttpStatus.OK);
+            pontoEletronicoService.register(idUsuario);
+            return ResponseEntity.noContent().build();
         } catch (Exception e) {
             String errorMessage;
             errorMessage = e + " <-- error";
-            return new ResponseEntity<>(errorMessage, HttpStatus.BAD_REQUEST);
+            return ResponseEntity.badRequest().body(errorMessage);
         }
     }
 }

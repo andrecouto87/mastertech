@@ -1,12 +1,13 @@
 package br.com.couto.mastertech.entity;
 
+import br.com.couto.mastertech.model.TipoMarcacao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import java.util.Date;
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @NoArgsConstructor
@@ -15,27 +16,32 @@ public class PontoEletronico {
 
     @Id
     @GeneratedValue
-    @Getter
-    @Setter
     private Long id;
 
+    @Temporal(TemporalType.DATE)
     @Getter
-    @Setter
-    private String nome;
+    @OrderBy
+    Date data;
+
+    @Temporal(TemporalType.TIME)
+    @Getter
+    @OrderBy
+    Date hora;
 
     @Getter
     @Setter
-    private String cpf;
+    @Enumerated(EnumType.STRING)
+    private TipoMarcacao tipoMarcacao;
 
+    @ManyToOne
     @Getter
     @Setter
-    private String email;
-
-    @Getter
-    private Date data;
+    private Usuario usuario;
 
     @PrePersist
     protected void onCreate() {
         data = new Date();
+        hora = new Date();
     }
+
 }

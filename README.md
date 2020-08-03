@@ -8,30 +8,113 @@ In this challenge, the following technologies were used:
 * Spring Data
 * mySql 8
 
-# Database Structure
+# Database settings such as host, user and password are in the `application.properties` file
 
-To create the tables, the scripts are shown below.
+#SERVER CONFIG
+server.servlet.contextPath=/mastertech
 
-## User Table
-```SQL
-CREATE TABLE `tb_user` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `cpf` varchar(255) DEFAULT NULL,
-  `registration_date` datetime(6) DEFAULT NULL,
-  `email` varchar(255) DEFAULT NULL,
-  `full_name` varchar(255) DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+## MySQL
+hibernate.connection.driver_class = com.mysql.cj.jdbc.Driver
+spring.datasource.url=jdbc:mysql://localhost:3306/mastertech?useSSL=false&serverTimezone=UTC&useLegacyDatetimeCode=false
+spring.datasource.username=mastertech
+spring.datasource.password=mastertech
+spring.jpa.database-platform=org.hibernate.dialect.MySQL8Dialect
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=create
+hibernate.hbm2ddl.auto=validate
+
+## ENDPOINTS
+
+### Users
+
+#### GET - /usuario
+
+List of all users registered in the database
+
+```
+[
+    {
+        "id": 1,
+        "nome": "Jose",
+        "cpf": "36910240847",
+        "email": "jose@gmail.com",
+        "data": "2020-08-03T05:10:04.744+00:00"
+    },
+    {
+        "id": 2,
+        "nome": "Maria",
+        "cpf": "11111111111",
+        "email": "maria@gmail.com",
+        "data": "2020-08-03T05:22:58.626+00:00"
+    }
+]
 ```
 
-## Electronic Point Control System Table
-```SQL
-CREATE TABLE `tb_electronic_point_control` (
-  `id` bigint NOT NULL AUTO_INCREMENT,
-  `id_user` bigint DEFAULT NULL,
-  `point_record_date` datetime DEFAULT NULL,
-  `point_record_type` varchar(1) DEFAULT NULL,
-  PRIMARY KEY (`id`),
-  KEY `FK60nxdvtq7wpt42am82t9ogvyv` (`id_user`),
-  CONSTRAINT `FK60nxdvtq7wpt42am82t9ogvyv` FOREIGN KEY (`id_user`) REFERENCES `tb_user` (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+#### GET - /usuario/{id}
+
+User details found by id
+
+```
+{
+    "id": 1,
+    "nome": "Jose",
+    "cpf": "36910240847",
+    "email": "jose@gmail.com",
+    "data": "2020-08-03T05:10:04.744+00:00"
+}
+```
+
+#### POST - /usuario
+
+New User
+```
+{
+   "nome": "Jose",
+   "cpf": "36910240847",
+   "email": "jose@gmail.com",
+}
+```
+
+#### PUT - /usuario/{id}
+
+Update User
+```
+/usuario/1
+{
+    "id": 1,
+    "nome": "Jose Maria",
+    "cpf": "36910240847",
+    "email": "jose@gmail.com"
+}
+```
+
+### Electronic Point
+
+#### GET - /pontoeletronico
+
+```
+[
+    {
+        "data": "03/08/2020",
+        "horasTrabalhadas": "00:00:08",
+        "marcacoes": [
+            {
+                "hora": "02:40:15",
+                "tipo": "ENTRADA"
+            },
+            {
+                "hora": "02:40:22",
+                "tipo": "SAIDA"
+            },
+            {
+                "hora": "02:40:23",
+                "tipo": "ENTRADA"
+            },
+            {
+                "hora": "02:40:24",
+                "tipo": "SAIDA"
+            }
+        ]
+    }
+]
+```

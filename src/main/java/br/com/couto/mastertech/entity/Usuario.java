@@ -1,13 +1,12 @@
 package br.com.couto.mastertech.entity;
 
-import br.com.couto.mastertech.model.TipoMarcacao;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
 import java.util.Date;
+import javax.persistence.*;
 
 @Entity
 @NoArgsConstructor
@@ -16,32 +15,27 @@ public class Usuario {
 
     @Id
     @GeneratedValue
+    @Getter
+    @Setter
     private Long id;
 
-    @Temporal(TemporalType.DATE)
     @Getter
-    @OrderBy
-    Date data;
-
-    @Temporal(TemporalType.TIME)
-    @Getter
-    @OrderBy
-    Date hora;
+    @Setter
+    private String nome;
 
     @Getter
     @Setter
-    @Enumerated(EnumType.STRING)
-    private TipoMarcacao tipoMarcacao;
+    private String cpf;
 
-    @ManyToOne
     @Getter
     @Setter
-    private Usuario usuario;
+    private String email;
+
+    @Getter
+    private Date data;
 
     @PrePersist
     protected void onCreate() {
         data = new Date();
-        hora = new Date();
     }
-
 }
