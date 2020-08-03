@@ -8,4 +8,5 @@ public class MastertechApplication {
 	public static void main(String[] args) {
 		SpringApplication.run(MastertechApplication.class, args);
 	}
+
 }
